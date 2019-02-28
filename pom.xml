@@ -6,7 +6,7 @@
 
     <groupId>io.github.leordev</groupId>
     <artifactId>eos-mc</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <repositories>
         <repository>
@@ -23,12 +23,6 @@
             <version>1.13-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.mashape.unirest</groupId>-->
-            <!--<artifactId>unirest-java</artifactId>-->
-            <!--<version>1.4.9</version>-->
-        <!--</dependency>-->
     </dependencies>
 
     <!--<build>-->
