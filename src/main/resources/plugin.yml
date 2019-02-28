@@ -1,3 +1,8 @@
 name: EosMcPlugin
 version: 0.0.1
 main: io.github.leordev.EosMcPlugin
+
+commands:
+  dump:
+    description: Dump EOS Items
+    usage: /dump
