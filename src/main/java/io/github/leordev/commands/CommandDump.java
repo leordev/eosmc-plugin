@@ -1,6 +1,7 @@
 package io.github.leordev.commands;
 
 import io.github.leordev.config.EosConfig;
+import io.github.leordev.items.TokenHandler;
 import io.github.leordev.items.TokenItem;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -11,6 +12,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.List;
 
 import static io.github.leordev.EosMcPlugin.DATA_FOLDER;
 import static io.github.leordev.EosMcPlugin.LOGGER;
@@ -43,10 +45,9 @@ public class CommandDump implements CommandExecutor {
 
     private int printItems(PrintStream out) {
         int count = 0;
-        for (Material material : Material.values()) {
-            if (!material.isItem()) continue;
-            TokenItem item = new TokenItem(material.getId(), material.name());
-            String itemLine = dumpTokenCsv(item);
+        List<TokenItem> tokens = TokenHandler.getTokensList();
+        for (TokenItem token : tokens) {
+            String itemLine = dumpTokenCsv(token);
             out.println(itemLine);
             count++;
         }
@@ -77,11 +78,10 @@ public class CommandDump implements CommandExecutor {
     }
 
     private void printCleosItems(PrintStream out) {
-        for (Material material : Material.values()) {
-            if (!material.isItem()) continue;
-            TokenItem item = new TokenItem(material.getId(), material.name());
-            String itemCmd = dumpTokenCleos(item);
-            out.println(itemCmd);
+        List<TokenItem> tokens = TokenHandler.getTokensList();
+        for (TokenItem token : tokens) {
+            String cleosCmd = dumpTokenCleos(token);
+            out.println(cleosCmd);
         }
     }
 

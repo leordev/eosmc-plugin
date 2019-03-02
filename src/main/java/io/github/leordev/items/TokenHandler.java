@@ -1,7 +1,10 @@
 package io.github.leordev.items;
 
+import org.bukkit.Material;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TokenHandler {
 
@@ -58,6 +61,36 @@ public class TokenHandler {
         }
 
         return unPeriodRes.substring(0, end);
+    }
+
+    public static List<TokenItem> getTokensList() {
+        List<TokenItem> tokens = new ArrayList<>();
+        for (Material material : Material.values()) {
+            if (!material.isItem()) continue;
+            TokenItem item = new TokenItem(material.getId(), material.name());
+            item.eosTokenName = deduplicateName(tokens, item.eosTokenName);
+            tokens.add(item);
+        }
+        return tokens;
+    }
+
+    private static String deduplicateName(List<TokenItem> tokens, String eosTokenName) {
+        String name = eosTokenName;
+
+        Optional<TokenItem> duplicatedToken = tokens.stream().filter(token -> token.eosTokenName.equals(eosTokenName)).findAny();
+        int i = 1;
+        while (duplicatedToken.isPresent()) {
+            name = removeLastChars(name, String.valueOf(i).length()) + i;
+            final String nextName = name;
+            duplicatedToken = tokens.stream().filter(token -> token.eosTokenName.equals(nextName)).findAny();
+            i += i % 5 == 0 ? 6 : 1;
+        }
+
+        return name;
+    }
+
+    private static String removeLastChars(String str, int charsToRemove) {
+        return str.substring(0, str.length() - charsToRemove);
     }
 
 }
