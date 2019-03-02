@@ -3,6 +3,7 @@ package io.github.leordev.eosmc.gui;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.leordev.eosmc.config.EosConfig;
+import io.github.leordev.eosmc.i18n.Lang;
 import io.github.leordev.eosmc.items.TokenHandler;
 import io.github.leordev.eosmc.player.PlayerMetaData;
 import io.github.leordev.eosmc.utils.HttpHandler;
@@ -62,14 +63,14 @@ public class GuiDeposit implements GuiEos {
         List<ItemStack> items = getDepositBatchItems(event.getView());
 
         if (items.size() < 1) {
-            MessageHelper.sendWarning(player, "No items to submit");
+            MessageHelper.sendWarning(player, Lang.DP_NO_ITEMS);
             return;
         }
 
         if (!PlayerMetaData.validateAccountAndMessagePlayer(player)) return;
 
         sendingToChain = true;
-        MessageHelper.sendInfo(player, "Depositing to your EOS account", true);
+        MessageHelper.sendInfo(player, Lang.DP_ING, true);
         JsonArray jsonItems = new JsonArray();
         for (ItemStack itemStack : items) {
             jsonItems.add(makeJsonItem(itemStack));
@@ -82,11 +83,11 @@ public class GuiDeposit implements GuiEos {
             String url = EosConfig.getInterfaceServer() + "/player/" + account + "/deposit";
             HttpHandler.postUrl(url, obj.toString());
             removeBatchItems(event.getView());
-            MessageHelper.sendSuccess(player,"Items were deposited to the chain successfully");
+            MessageHelper.sendSuccess(player,Lang.DP_SUCCESS);
             player.closeInventory();
         } catch (IOException e) {
             e.printStackTrace();
-            MessageHelper.sendError(player, "Fail to deposit items, please try again...");
+            MessageHelper.sendError(player, Lang.DP_FAIL);
             sendingToChain = false;
         }
     }

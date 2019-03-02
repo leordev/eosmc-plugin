@@ -1,5 +1,6 @@
 package io.github.leordev.eosmc.player;
 
+import io.github.leordev.eosmc.i18n.Lang;
 import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,14 +16,14 @@ public class JoinEventHandler implements Listener {
         String eosAccount = PlayerMetaData.getEosAccount(player);
 
         if (eosAccount == null || eosAccount.isEmpty()) {
-            MessageHelper.sendWarning(player,"Ooopss... Looks like you didn't add your EOS Account yet.");
-            MessageHelper.sendInfo(player,"Access http://eosminecraft.io/join to see instructions!");
+            MessageHelper.sendWarning(player, Lang.PLAYER_NO_ACC);
+            MessageHelper.sendInfo(player,Lang.PLAYER_HELP_URL);
         } else {
-            MessageHelper.sendSuccess(player,"Welcome back to EOS Minecraft, " + eosAccount);
+            MessageHelper.sendSuccess(player,Lang.PLAYER_WELCOME, eosAccount);
         }
 
-        MessageHelper.sendInfo(player,"Use /dp to deposit items to the blockchain");
-        MessageHelper.sendInfo(player,"Use /wt to withdraw items from the blockchain");
+        MessageHelper.sendInfo(player,Lang.DP_HELP);
+        MessageHelper.sendInfo(player,Lang.WT_HELP);
 
     }
 }

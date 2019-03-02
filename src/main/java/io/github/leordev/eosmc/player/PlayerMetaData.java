@@ -2,6 +2,7 @@ package io.github.leordev.eosmc.player;
 
 import io.github.leordev.eosmc.EosMcPlugin;
 import io.github.leordev.eosmc.config.EosConfig;
+import io.github.leordev.eosmc.i18n.Lang;
 import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -14,7 +15,7 @@ public class PlayerMetaData {
     public static boolean validateAccountAndMessagePlayer(Player player) {
         String account = PlayerMetaData.getEosAccount(player);
         if (account == null || account.isEmpty()) {
-            MessageHelper.sendWarning(player, "Please setup your EOS Account with: /eosacc <account>");
+            MessageHelper.sendWarning(player, Lang.ACC_HELP);
         }
 
         return true;
