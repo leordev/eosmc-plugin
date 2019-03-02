@@ -1,5 +1,6 @@
 package io.github.leordev.commands;
 
+import io.github.leordev.items.TokenHandler;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -30,7 +31,7 @@ public class CommandDump implements CommandExecutor {
 
                 String itemLine = String.join(",",
                         String.valueOf(material.getId()),
-                        material.name());
+                        TokenHandler.tokenizeItemName(material.name()));
 
                 out.println(itemLine);
                 count++;

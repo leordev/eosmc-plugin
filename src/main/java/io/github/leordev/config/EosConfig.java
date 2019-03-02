@@ -6,7 +6,7 @@ public class EosConfig {
 
     private static FileConfiguration instance;
 
-    private static final String ACCOUNT = "eosAccount";
+    public static final String ACCOUNT = "eosAccount";
     private static final String PUBLIC_KEY = "eosPublicKey";
     private static final String PRIVATE_KEY = "eosPrivateKey";
     private static final String INTERFACE_SERVER = "eosInterfaceServer";

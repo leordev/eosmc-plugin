@@ -9,3 +9,7 @@ commands:
   eosacc:
     description: Set EOS Account
     usage: /eosacc <account>
+  deposit:
+    description: Deposit items to Blockchain
+    usage: /deposit
+    aliases: [dp]
