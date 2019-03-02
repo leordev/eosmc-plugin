@@ -1,6 +1,6 @@
 name: EosMcPlugin
 version: 0.0.1
-main: io.github.leordev.EosMcPlugin
+main: io.github.leordev.eosmc.EosMcPlugin
 
 commands:
   dump:

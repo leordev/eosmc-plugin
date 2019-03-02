@@ -1,7 +1,7 @@
-package io.github.leordev.commands;
+package io.github.leordev.eosmc.commands;
 
-import io.github.leordev.gui.GuiDeposit;
-import io.github.leordev.player.PlayerMetaData;
+import io.github.leordev.eosmc.gui.GuiDeposit;
+import io.github.leordev.eosmc.player.PlayerMetaData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -1,9 +1,8 @@
-package io.github.leordev.commands;
+package io.github.leordev.eosmc.commands;
 
-import io.github.leordev.config.EosConfig;
-import io.github.leordev.items.TokenHandler;
-import io.github.leordev.items.TokenItem;
-import org.bukkit.Material;
+import io.github.leordev.eosmc.config.EosConfig;
+import io.github.leordev.eosmc.items.TokenHandler;
+import io.github.leordev.eosmc.items.TokenItem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,8 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.List;
 
-import static io.github.leordev.EosMcPlugin.DATA_FOLDER;
-import static io.github.leordev.EosMcPlugin.LOGGER;
+import static io.github.leordev.eosmc.EosMcPlugin.DATA_FOLDER;
+import static io.github.leordev.eosmc.EosMcPlugin.LOGGER;
 
 public class CommandDump implements CommandExecutor {
 

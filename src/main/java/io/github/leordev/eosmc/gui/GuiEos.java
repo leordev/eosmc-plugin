@@ -1,4 +1,4 @@
-package io.github.leordev.gui;
+package io.github.leordev.eosmc.gui;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

@@ -1,4 +1,4 @@
-package io.github.leordev.config;
+package io.github.leordev.eosmc.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

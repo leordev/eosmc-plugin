@@ -1,12 +1,12 @@
-package io.github.leordev.gui;
+package io.github.leordev.eosmc.gui;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.leordev.config.EosConfig;
-import io.github.leordev.items.TokenHandler;
-import io.github.leordev.player.PlayerMetaData;
-import io.github.leordev.utils.HttpHandler;
-import io.github.leordev.utils.MessageHelper;
+import io.github.leordev.eosmc.config.EosConfig;
+import io.github.leordev.eosmc.items.TokenHandler;
+import io.github.leordev.eosmc.player.PlayerMetaData;
+import io.github.leordev.eosmc.utils.HttpHandler;
+import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package io.github.leordev.items;
+package io.github.leordev.eosmc.items;
 
 public class TokenItem {
     public int srcItemId;

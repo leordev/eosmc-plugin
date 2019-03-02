@@ -1,4 +1,4 @@
-package io.github.leordev.utils;
+package io.github.leordev.eosmc.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package io.github.leordev.items;
+package io.github.leordev.eosmc.items;
 
 import org.bukkit.Material;
 

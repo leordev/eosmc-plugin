@@ -1,0 +1,4 @@
+# %p is where the player name will get inserted.
+# %acc is where the eos account number will get inserted.
+
+setting-acc=Setting EOS account

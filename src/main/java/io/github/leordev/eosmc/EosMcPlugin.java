@@ -1,11 +1,11 @@
-package io.github.leordev;
+package io.github.leordev.eosmc;
 
-import io.github.leordev.commands.CommandDeposit;
-import io.github.leordev.commands.CommandDump;
-import io.github.leordev.commands.CommandEosacc;
-import io.github.leordev.config.EosConfig;
-import io.github.leordev.gui.GuiEventHandler;
-import io.github.leordev.player.JoinEventHandler;
+import io.github.leordev.eosmc.commands.CommandDeposit;
+import io.github.leordev.eosmc.commands.CommandDump;
+import io.github.leordev.eosmc.commands.CommandEosacc;
+import io.github.leordev.eosmc.config.EosConfig;
+import io.github.leordev.eosmc.gui.GuiEventHandler;
+import io.github.leordev.eosmc.player.JoinEventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 

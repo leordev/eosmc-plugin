@@ -1,6 +1,6 @@
-package io.github.leordev.player;
+package io.github.leordev.eosmc.player;
 
-import io.github.leordev.utils.MessageHelper;
+import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

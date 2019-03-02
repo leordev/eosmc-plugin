@@ -1,8 +1,8 @@
-package io.github.leordev.player;
+package io.github.leordev.eosmc.player;
 
-import io.github.leordev.EosMcPlugin;
-import io.github.leordev.config.EosConfig;
-import io.github.leordev.utils.MessageHelper;
+import io.github.leordev.eosmc.EosMcPlugin;
+import io.github.leordev.eosmc.config.EosConfig;
+import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
