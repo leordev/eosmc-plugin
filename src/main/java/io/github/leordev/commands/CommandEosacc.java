@@ -6,11 +6,11 @@ import io.github.leordev.EosMcPlugin;
 import io.github.leordev.config.EosConfig;
 import io.github.leordev.player.PlayerMetaData;
 import io.github.leordev.utils.HttpHandler;
+import io.github.leordev.utils.MessageHelper;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class CommandEosacc implements CommandExecutor {
 
         String data = "{\"mcUsername\": \"" + mcUsername + "\"}";
         EosMcPlugin.LOGGER.info("Setting player: " + data);
-        player.sendMessage("Setting EOS account, please wait...");
+        MessageHelper.sendInfo(player, "Setting EOS account", true);
 
         try {
             String url = EosConfig.getInterfaceServer() + "/player/" + account + "/confirm";
@@ -37,17 +37,17 @@ public class CommandEosacc implements CommandExecutor {
             boolean success = json.getAsJsonObject().get("success").getAsBoolean();
             if (success) {
                 PlayerMetaData.setEosAccount(player, account);
-                player.sendMessage("EOS account was set properly!");
+                MessageHelper.sendSuccess(player, "EOS account was set properly!");
                 EosMcPlugin.LOGGER.info("Player " + mcUsername + " set account " + account);
             } else {
-                player.sendMessage("Fail to set EOS Account");
+                MessageHelper.sendError(player, "Fail to set EOS Account");
                 EosMcPlugin.LOGGER.severe(response);
             }
         } catch (IOException e) {
             e.printStackTrace();
             String msg = "Fail to set EOS Account >> \n" + e.getMessage();
             EosMcPlugin.LOGGER.severe(msg);
-            player.sendMessage(msg);
+            MessageHelper.sendError(player, msg);
             return false;
         }
 

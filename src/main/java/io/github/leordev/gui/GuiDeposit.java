@@ -1,13 +1,12 @@
 package io.github.leordev.gui;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.leordev.EosMcPlugin;
 import io.github.leordev.config.EosConfig;
 import io.github.leordev.items.TokenHandler;
 import io.github.leordev.player.PlayerMetaData;
 import io.github.leordev.utils.HttpHandler;
+import io.github.leordev.utils.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GuiDeposit implements GuiEos {
 
@@ -64,14 +62,14 @@ public class GuiDeposit implements GuiEos {
         List<ItemStack> items = getDepositBatchItems(event.getView());
 
         if (items.size() < 1) {
-            player.sendMessage("No items to submit");
+            MessageHelper.sendWarning(player, "No items to submit");
             return;
         }
 
         if (!PlayerMetaData.validateAccountAndMessagePlayer(player)) return;
 
         sendingToChain = true;
-        player.sendMessage("Depositing to your EOS account, please wait...");
+        MessageHelper.sendInfo(player, "Depositing to your EOS account", true);
         JsonArray jsonItems = new JsonArray();
         for (ItemStack itemStack : items) {
             jsonItems.add(makeJsonItem(itemStack));
@@ -84,11 +82,11 @@ public class GuiDeposit implements GuiEos {
             String url = EosConfig.getInterfaceServer() + "/player/" + account + "/deposit";
             HttpHandler.postUrl(url, obj.toString());
             removeBatchItems(event.getView());
-            player.sendMessage("Items were deposited to the chain successfully");
+            MessageHelper.sendSuccess(player,"Items were deposited to the chain successfully");
             player.closeInventory();
         } catch (IOException e) {
             e.printStackTrace();
-            player.sendMessage("Fail to deposit items, please try again...");
+            MessageHelper.sendError(player, "Fail to deposit items, please try again...");
             sendingToChain = false;
         }
     }

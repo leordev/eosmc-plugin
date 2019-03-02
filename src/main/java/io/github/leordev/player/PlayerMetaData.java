@@ -2,8 +2,8 @@ package io.github.leordev.player;
 
 import io.github.leordev.EosMcPlugin;
 import io.github.leordev.config.EosConfig;
+import io.github.leordev.utils.MessageHelper;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
@@ -14,8 +14,7 @@ public class PlayerMetaData {
     public static boolean validateAccountAndMessagePlayer(Player player) {
         String account = PlayerMetaData.getEosAccount(player);
         if (account == null || account.isEmpty()) {
-            player.sendMessage("Please setup your EOS Account with: /eosacc <account>");
-            return false;
+            MessageHelper.sendWarning(player, "Please setup your EOS Account with: /eosacc <account>");
         }
 
         return true;
