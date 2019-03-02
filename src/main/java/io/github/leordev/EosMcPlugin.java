@@ -1,6 +1,7 @@
 package io.github.leordev;
 
 import io.github.leordev.commands.CommandDump;
+import io.github.leordev.commands.CommandEosacc;
 import io.github.leordev.config.EosConfig;
 import io.github.leordev.player.JoinHandler;
 import org.bukkit.event.EventHandler;
@@ -30,6 +31,7 @@ public class EosMcPlugin extends JavaPlugin implements Listener {
         // Enable our class to check for new players using onPlayerJoin()
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("dump").setExecutor(new CommandDump());
+        getCommand("eosacc").setExecutor(new CommandEosacc());
     }
 
     @Override

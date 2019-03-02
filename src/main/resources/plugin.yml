@@ -6,3 +6,6 @@ commands:
   dump:
     description: Dump EOS Items
     usage: /dump
+  eosacc:
+    description: Set EOS Account
+    usage: /eosacc <account>

@@ -1,3 +1,4 @@
 eosAccount: eosminecraft
 eosPublicKey: EOS8KritzjsupZ6XpD5CDZ8G8cfX4iUyiuQfwZwzYgd5xioq83CbB
 eosPrivateKey: 5HuTSJPc7v6WkrjApzESH7KZqMQHAHAHHAHAHHAHAHHAHAHAHHAH
+eosInterfaceServer: http://localhost:5000
