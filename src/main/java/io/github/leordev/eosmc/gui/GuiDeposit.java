@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.i18n.Lang;
 import io.github.leordev.eosmc.items.TokenHandler;
+import io.github.leordev.eosmc.items.TokenItem;
 import io.github.leordev.eosmc.player.PlayerMetaData;
 import io.github.leordev.eosmc.utils.HttpHandler;
 import io.github.leordev.eosmc.utils.MessageHelper;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GuiDeposit implements GuiEos {
 
@@ -26,6 +28,11 @@ public class GuiDeposit implements GuiEos {
     private final int CONFIRM_SLOT = 33;
     private final int DEPOSIT_SLOTS = 36;
     private boolean sendingToChain = false;
+    private Player player;
+
+    public GuiDeposit(Player player) {
+        this.player = player;
+    }
 
     @Override
     public Inventory getInventory() {
@@ -39,7 +46,6 @@ public class GuiDeposit implements GuiEos {
     @Override
     public void onGuiClick(InventoryClickEvent event) {
 
-        Player player = (Player) event.getWhoClicked();
         int slot = event.getRawSlot();
         ItemStack itemStack = event.getCurrentItem();
 
@@ -55,11 +61,11 @@ public class GuiDeposit implements GuiEos {
         }
 
         if(slot == CONFIRM_SLOT && !sendingToChain) {
-            submitBatchToChain(player, event);
+            submitBatchToChain(event);
         }
     }
 
-    private void submitBatchToChain(Player player, InventoryClickEvent event) {
+    private void submitBatchToChain(InventoryClickEvent event) {
         List<ItemStack> items = getDepositBatchItems(event.getView());
 
         if (items.size() < 1) {
@@ -69,44 +75,11 @@ public class GuiDeposit implements GuiEos {
 
         if (!PlayerMetaData.validateAccountAndMessagePlayer(player)) return;
 
-        sendingToChain = true;
-        MessageHelper.sendInfo(player, Lang.DP_ING, true);
-        JsonArray jsonItems = new JsonArray();
-        for (ItemStack itemStack : items) {
-            jsonItems.add(makeJsonItem(itemStack));
-        }
-        JsonObject obj = new JsonObject();
-        obj.add("items", jsonItems);
-
         try {
-            String account = PlayerMetaData.getEosAccount(player);
-            String url = EosConfig.getInterfaceServer() + "/player/" + account + "/deposit";
-            HttpHandler.postUrl(url, obj.toString());
-            removeBatchItems(event.getView());
-            MessageHelper.sendSuccess(player,Lang.DP_SUCCESS);
-            player.closeInventory();
-        } catch (IOException e) {
-            e.printStackTrace();
-            MessageHelper.sendError(player, Lang.DP_FAIL);
-            sendingToChain = false;
+            attemptBatchSubmission(items, event.getView());
+        } catch (Exception e) {
+            handleBatchSubmissionError(e);
         }
-    }
-
-    private void removeBatchItems(InventoryView inventory) {
-        for (int i = 0; i < DEPOSIT_SLOTS; i++) {
-            if (i == CLOSE_SLOT || i == CONFIRM_SLOT) continue;
-            ItemStack item = inventory.getItem(i);
-            if (isEmptyStack(item)) continue;
-            inventory.setItem(i, null);
-        }
-    }
-
-    private JsonObject makeJsonItem(ItemStack itemStack) {
-        JsonObject jsonItem = new JsonObject();
-        String tokenName = TokenHandler.tokenizeItemName(itemStack.getType().name());
-        jsonItem.addProperty("token_name", tokenName);
-        jsonItem.addProperty("quantity", itemStack.getAmount());
-        return jsonItem;
     }
 
     private List<ItemStack> getDepositBatchItems(InventoryView inventory) {
@@ -120,8 +93,59 @@ public class GuiDeposit implements GuiEos {
         return items;
     }
 
+    private void attemptBatchSubmission(List<ItemStack> items, InventoryView inventory) throws IOException {
+        sendingToChain = true;
+        MessageHelper.sendInfoAndWait(player, Lang.DP_ING);
+
+        String account = PlayerMetaData.getEosAccount(player);
+        String url = EosConfig.getInterfaceServer() + "/player/" + account + "/deposit";
+        JsonObject jsonItems = makeJsonItems(items);
+        HttpHandler.postUrl(url, jsonItems.toString());
+
+        MessageHelper.sendSuccess(player,Lang.DP_SUCCESS);
+        removeBatchItems(inventory);
+        player.closeInventory();
+    }
+
+    private void handleBatchSubmissionError(Exception e) {
+        e.printStackTrace();
+        MessageHelper.sendError(player, Lang.DP_FAIL);
+        sendingToChain = false;
+    }
+
+    private JsonObject makeJsonItems(List<ItemStack> items) {
+        JsonArray jsonItems = new JsonArray();
+        for (ItemStack itemStack : items) {
+            jsonItems.add(makeJsonItem(itemStack));
+        }
+        JsonObject obj = new JsonObject();
+        obj.add("items", jsonItems);
+        return obj;
+    }
+
+    private JsonObject makeJsonItem(ItemStack itemStack) {
+        JsonObject jsonItem = new JsonObject();
+        Optional<TokenItem> token = TokenHandler.fromItem(itemStack);
+        if (token.isPresent()) {
+            jsonItem.addProperty("token_name", token.get().getEosTokenName());
+            jsonItem.addProperty("quantity", itemStack.getAmount());
+            return jsonItem;
+        } else {
+            throw new IllegalArgumentException("Invalid Item");
+        }
+    }
+
+    private void removeBatchItems(InventoryView inventory) {
+        for (int i = 0; i < DEPOSIT_SLOTS; i++) {
+            if (i == CLOSE_SLOT || i == CONFIRM_SLOT) continue;
+            ItemStack item = inventory.getItem(i);
+            if (isEmptyStack(item)) continue;
+            inventory.setItem(i, null);
+        }
+    }
+
     @Override
-    public void onGuiClose(Player player) {
+    public void onGuiClose() {
         InventoryView inventory = player.getOpenInventory();
         List<ItemStack> recoveredItems = getDepositBatchItems(inventory);
         if (recoveredItems.size() > 0) {
@@ -132,8 +156,9 @@ public class GuiDeposit implements GuiEos {
         }
     }
 
-    boolean isEmptyStack(ItemStack itemStack) {
-        return itemStack == null || itemStack.getType().equals(Material.AIR);
+    private boolean isEmptyStack(ItemStack itemStack) {
+        return itemStack == null
+                || itemStack.getType().equals(Material.AIR);
     }
 
 }

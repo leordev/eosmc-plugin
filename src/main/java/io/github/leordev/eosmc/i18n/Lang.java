@@ -1,8 +1,5 @@
 package io.github.leordev.eosmc.i18n;
 
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 public enum Lang {
     ACC_HELP("acc-help", "Please setup your EOS Account with: /eosacc <account>"),
     ACC_SETTING("acc-setting", "Setting EOS Account"),
@@ -15,33 +12,20 @@ public enum Lang {
     DP_FAIL("dp-fail", "Fail to deposit items, please try again..."),
     PLAYER_NO_ACC("player-no-acc", "Ooopss... Looks like you didn't add your EOS Account yet."),
     PLAYER_HELP_URL("player-help-url", "Access http://eosminecraft.io/join to see instructions!"),
-    PLAYER_WELCOME("player-welcome", "Welcome back to EOS Minecraft, %1"),
+    PLAYER_WELCOME("player-welcome", "Welcome back to EOS Minecraft, %s"),
     PLEASE_WAIT("please-wait", "Please Wait..."),
     WT_HELP("wt-help", "Use /wt to withdraw items from the blockchain");
 
-    private static YamlConfiguration LANG;
     private final String path;
-    private final String def;
+    private final String text;
 
-    Lang(String path, String def) {
+    Lang(String path, String text) {
         this.path = path;
-        this.def = def;
-    }
-
-    public static void setFile(YamlConfiguration config) {
-        LANG = config;
+        this.text = text;
     }
 
     @Override
     public String toString() {
-        return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def));
-    }
-
-    public String getDefault() {
-        return this.def;
-    }
-
-    public String getPath() {
-        return this.path;
+        return text;
     }
 }

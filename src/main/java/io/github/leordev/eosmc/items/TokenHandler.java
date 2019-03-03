@@ -1,6 +1,8 @@
 package io.github.leordev.eosmc.items;
 
+import io.github.leordev.eosmc.EosMcPlugin;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,24 @@ public class TokenHandler {
 
     private final static int MAX_MIDDLE_WORD_LENGTH = 3;
     private final static int TOKEN_NAME_LENGTH = 12;
+    public static List<TokenItem> tokens = new ArrayList<>();
+
+    public static List<TokenItem> initializeTokens() {
+        tokens = new ArrayList<>();
+        for (Material material : Material.values()) {
+            if (!material.isItem()) continue;
+            TokenItem item = new TokenItem(material);
+            item.deduplicateName(tokens);
+            tokens.add(item);
+        }
+        return tokens;
+    }
+
+    public static Optional<TokenItem> fromItem(ItemStack item) {
+        return tokens.stream()
+                .filter(t -> t.getSrcItemName().equals(item.getType().toString()))
+                .findFirst();
+    }
 
     public static String tokenizeItemName(String name) {
         String alphabetized = name.replaceAll("0|[6-9]", "1");
@@ -61,36 +81,6 @@ public class TokenHandler {
         }
 
         return unPeriodRes.substring(0, end);
-    }
-
-    public static List<TokenItem> getTokensList() {
-        List<TokenItem> tokens = new ArrayList<>();
-        for (Material material : Material.values()) {
-            if (!material.isItem()) continue;
-            TokenItem item = new TokenItem(material.getId(), material.name());
-            item.eosTokenName = deduplicateName(tokens, item.eosTokenName);
-            tokens.add(item);
-        }
-        return tokens;
-    }
-
-    private static String deduplicateName(List<TokenItem> tokens, String eosTokenName) {
-        String name = eosTokenName;
-
-        Optional<TokenItem> duplicatedToken = tokens.stream().filter(token -> token.eosTokenName.equals(eosTokenName)).findAny();
-        int i = 1;
-        while (duplicatedToken.isPresent()) {
-            name = removeLastChars(name, String.valueOf(i).length()) + i;
-            final String nextName = name;
-            duplicatedToken = tokens.stream().filter(token -> token.eosTokenName.equals(nextName)).findAny();
-            i += i % 5 == 0 ? 6 : 1;
-        }
-
-        return name;
-    }
-
-    private static String removeLastChars(String str, int charsToRemove) {
-        return str.substring(0, str.length() - charsToRemove);
     }
 
 }

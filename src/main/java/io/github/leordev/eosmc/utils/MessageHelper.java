@@ -5,36 +5,38 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class MessageHelper {
-    public static void send(Player player, String message) {
-        player.sendMessage(message);
+
+    public static void send(Player player,
+                            ChatColor color,
+                            Lang message,
+                            Object... args) {
+        String appendedMessage = String.format(message.toString(), args);
+        player.sendMessage(color + appendedMessage);
     }
 
-    public static void sendError(Player player, Lang message) {
-        send(player, ChatColor.RED + message.toString());
+    public static void sendError(Player player, Lang message, Object... args) {
+        send(player, ChatColor.RED, message, args);
     }
 
-    public static void sendSuccess(Player player, Lang message) {
-        send(player, ChatColor.GREEN + message.toString());
+    public static void sendSuccess(Player player, Lang message, Object... args) {
+        send(player, ChatColor.GREEN, message, args);
     }
 
-    public static void sendSuccess(Player player, Lang message, String... args) {
-        send(player, ChatColor.GREEN + message.toString() + args[0]); // TODO: parse args
+    public static void sendWarning(Player player, Lang message, Object... args) {
+        send(player, ChatColor.GOLD, message, args);
     }
 
-    public static void sendWarning(Player player, Lang message) {
-        send(player, ChatColor.GOLD + message.toString());
+
+    public static void sendInfo(Player player, Lang message, Object... args) {
+        send(player, ChatColor.AQUA, message, args);
     }
 
-    public static void sendInfo(Player player, Lang message, boolean andSendWait) {
-        send(player, ChatColor.AQUA + message.toString());
-        if (andSendWait) sendWait(player);
-    }
-
-    public static void sendInfo(Player player, Lang message) {
-        send(player, ChatColor.AQUA + message.toString());
+    public static void sendInfoAndWait(Player player, Lang message, Object... args) {
+        sendInfo(player, message, args);
+        sendWait(player);
     }
 
     public static void sendWait(Player player) {
-        send(player, ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + Lang.PLEASE_WAIT);
+        send(player, ChatColor.LIGHT_PURPLE, Lang.PLEASE_WAIT);
     }
 }

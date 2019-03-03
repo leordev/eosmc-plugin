@@ -17,7 +17,7 @@ public class CommandDeposit implements CommandExecutor {
 
         if (!PlayerMetaData.validateAccountAndMessagePlayer(player)) return true;
 
-        GuiDeposit gui = new GuiDeposit();
+        GuiDeposit gui = new GuiDeposit(player);
         player.openInventory(gui.getInventory());
 
         return true;

@@ -5,6 +5,7 @@ import io.github.leordev.eosmc.commands.CommandDump;
 import io.github.leordev.eosmc.commands.CommandEosacc;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.gui.GuiEventHandler;
+import io.github.leordev.eosmc.items.TokenHandler;
 import io.github.leordev.eosmc.player.JoinEventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,7 +31,8 @@ public class EosMcPlugin extends JavaPlugin implements Listener {
         EosConfig.initialize(getConfig());
         saveConfig();
 
-        // Enable our class to check for new players using onPlayerJoin()
+        TokenHandler.initializeTokens();
+
         getServer().getPluginManager().registerEvents(new JoinEventHandler(), this);
         getServer().getPluginManager().registerEvents(new GuiEventHandler(), this);
         getCommand("dump").setExecutor(new CommandDump());

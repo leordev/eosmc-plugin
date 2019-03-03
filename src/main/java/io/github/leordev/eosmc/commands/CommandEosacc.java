@@ -29,7 +29,7 @@ public class CommandEosacc implements CommandExecutor {
 
         String data = "{\"mcUsername\": \"" + mcUsername + "\"}";
         EosMcPlugin.LOGGER.info("Setting player: " + data);
-        MessageHelper.sendInfo(player, Lang.ACC_SETTING, true);
+        MessageHelper.sendInfoAndWait(player, Lang.ACC_SETTING);
 
         try {
             String url = EosConfig.getInterfaceServer() + "/player/" + account + "/confirm";

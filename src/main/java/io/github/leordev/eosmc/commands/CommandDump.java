@@ -44,7 +44,7 @@ public class CommandDump implements CommandExecutor {
 
     private int printItems(PrintStream out) {
         int count = 0;
-        List<TokenItem> tokens = TokenHandler.getTokensList();
+        List<TokenItem> tokens = TokenHandler.tokens;
         for (TokenItem token : tokens) {
             String itemLine = dumpTokenCsv(token);
             out.println(itemLine);
@@ -55,14 +55,14 @@ public class CommandDump implements CommandExecutor {
 
     private String dumpTokenCsv(TokenItem item) {
         return String.join(",",
-                String.valueOf(item.srcItemId),
-                item.srcItemName,
-                item.eosCategory,
-                item.eosTokenName,
-                String.valueOf(item.fungible),
-                String.valueOf(item.burnable),
-                String.valueOf(item.transferable),
-                String.valueOf(item.maxSupply));
+                String.valueOf(item.getSrcItemId()),
+                item.getSrcItemName(),
+                item.getEosCategory(),
+                item.getEosTokenName(),
+                String.valueOf(item.isFungible()),
+                String.valueOf(item.isBurnable()),
+                String.valueOf(item.isTransferable()),
+                String.valueOf(item.getMaxSupply()));
     }
 
     private void dumpCleos() {
@@ -77,7 +77,7 @@ public class CommandDump implements CommandExecutor {
     }
 
     private void printCleosItems(PrintStream out) {
-        List<TokenItem> tokens = TokenHandler.getTokensList();
+        List<TokenItem> tokens = TokenHandler.tokens;
         for (TokenItem token : tokens) {
             String cleosCmd = dumpTokenCleos(token);
             out.println(cleosCmd);
@@ -89,12 +89,12 @@ public class CommandDump implements CommandExecutor {
         return "$CLEOS push action "
                 + account
                 + " create '[\"" + account
-                + "\", \"" + item.eosCategory
-                + "\", \"" + item.eosTokenName
-                + "\", " + item.fungible
-                + ", " + item.burnable
-                + ", " + item.transferable
-                + ", " + item.maxSupply
+                + "\", \"" + item.getEosCategory()
+                + "\", \"" + item.getEosTokenName()
+                + "\", " + item.isFungible()
+                + ", " + item.isBurnable()
+                + ", " + item.isTransferable()
+                + ", " + item.getMaxSupply()
                 + "]' -p " + account;
     }
 }
