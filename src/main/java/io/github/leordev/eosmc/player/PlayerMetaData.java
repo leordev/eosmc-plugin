@@ -16,6 +16,7 @@ public class PlayerMetaData {
         String account = PlayerMetaData.getEosAccount(player);
         if (account == null || account.isEmpty()) {
             MessageHelper.sendWarning(player, Lang.ACC_HELP);
+            return false;
         }
 
         return true;

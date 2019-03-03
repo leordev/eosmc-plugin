@@ -12,6 +12,8 @@ import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -20,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GuiDeposit implements GuiEos {
 
@@ -46,10 +47,18 @@ public class GuiDeposit implements GuiEos {
     @Override
     public void onGuiClick(InventoryClickEvent event) {
 
-        int slot = event.getRawSlot();
-        ItemStack itemStack = event.getCurrentItem();
+        if (event.getAction() == InventoryAction.DROP_ALL_CURSOR
+            || event.getAction() == InventoryAction.DROP_ALL_SLOT
+            || event.getAction() == InventoryAction.DROP_ONE_CURSOR
+            || event.getAction() == InventoryAction.DROP_ONE_SLOT) {
+            event.setCancelled(true);
+            return;
+        }
 
+        ItemStack itemStack = event.getCurrentItem();
         if(isEmptyStack(itemStack)) return;
+
+        int slot = event.getRawSlot();
 
         if (slot == CLOSE_SLOT || slot == CONFIRM_SLOT) {
             event.setCancelled(true);
