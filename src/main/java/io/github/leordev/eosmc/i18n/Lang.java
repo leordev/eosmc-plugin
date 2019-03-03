@@ -14,7 +14,12 @@ public enum Lang {
     PLAYER_HELP_URL("player-help-url", "Access http://eosminecraft.io/join to see instructions!"),
     PLAYER_WELCOME("player-welcome", "Welcome back to EOS Minecraft, %s"),
     PLEASE_WAIT("please-wait", "Please Wait..."),
-    WT_HELP("wt-help", "Use /wt to withdraw items from the blockchain");
+    WT_HELP("wt-help", "Use /wt to withdraw items from the blockchain"),
+    WT_REJECTED("wt-rejected", "You can't store items while withdrawing, use /dp to deposit"),
+    WT_ING("wt-ing", "Withdrawing item from your EOS Chest"),
+    WT_SUCCESS("wt-success", "Items were transferred successfully"),
+    WT_FAIL("wt-fail", "Fail to transfer item: %s")
+    ;
 
     private final String path;
     private final String text;

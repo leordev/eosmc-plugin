@@ -1,10 +1,10 @@
 package io.github.leordev.eosmc.gui;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 public class GuiEventHandler implements Listener {
@@ -23,6 +23,19 @@ public class GuiEventHandler implements Listener {
         if (holder instanceof GuiEos) {
             GuiEos gui = (GuiEos) holder;
             gui.onGuiClose();
+        }
+    }
+
+    @EventHandler
+    public void onInventoryMoveItem(InventoryMoveItemEvent e) {
+        if (e.getInitiator() instanceof GuiWithdraw) {
+            GuiWithdraw gui = (GuiWithdraw) e.getInitiator() ;
+            gui.transferItemFromChain(e);
+        }
+
+        if (e.getDestination() instanceof GuiWithdraw) {
+            GuiWithdraw gui = (GuiWithdraw) e.getDestination();
+            gui.rejectDeposits(e);
         }
     }
 }

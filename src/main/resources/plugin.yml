@@ -13,3 +13,7 @@ commands:
     description: Deposit items to Blockchain
     usage: /deposit
     aliases: [dp]
+  withdraw:
+    description: Withdraw items from player Blockchain Chest
+    usage: /withdraw
+    aliases: [wt]

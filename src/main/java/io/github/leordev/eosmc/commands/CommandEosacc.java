@@ -3,6 +3,7 @@ package io.github.leordev.eosmc.commands;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import io.github.leordev.eosmc.EosMcPlugin;
+import io.github.leordev.eosmc.api.ApiAccount;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.i18n.Lang;
 import io.github.leordev.eosmc.player.PlayerMetaData;
@@ -27,22 +28,15 @@ public class CommandEosacc implements CommandExecutor {
         String account = args[0];
         String mcUsername = player.getName();
 
-        String data = "{\"mcUsername\": \"" + mcUsername + "\"}";
-        EosMcPlugin.LOGGER.info("Setting player: " + data);
-        MessageHelper.sendInfoAndWait(player, Lang.ACC_SETTING);
-
         try {
-            String url = EosConfig.getInterfaceServer() + "/player/" + account + "/confirm";
-            String response = HttpHandler.postUrl(url, data);
-            JsonElement json = new JsonParser().parse(response);
-            boolean success = json.getAsJsonObject().get("success").getAsBoolean();
+            MessageHelper.sendInfoAndWait(player, Lang.ACC_SETTING);
+            boolean success = ApiAccount.setAccount(player, account);
             if (success) {
                 PlayerMetaData.setEosAccount(player, account);
                 MessageHelper.sendSuccess(player, Lang.ACC_SET);
                 EosMcPlugin.LOGGER.info("Player " + mcUsername + " set account " + account);
             } else {
                 MessageHelper.sendError(player, Lang.ACC_SET_FAIL);
-                EosMcPlugin.LOGGER.severe(response);
             }
         } catch (IOException e) {
             e.printStackTrace();

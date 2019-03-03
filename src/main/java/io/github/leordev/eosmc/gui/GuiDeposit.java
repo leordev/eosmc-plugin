@@ -1,19 +1,16 @@
 package io.github.leordev.eosmc.gui;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.github.leordev.eosmc.api.ApiDeposit;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.i18n.Lang;
-import io.github.leordev.eosmc.items.TokenHandler;
-import io.github.leordev.eosmc.items.TokenItem;
+import io.github.leordev.eosmc.items.TokenJson;
 import io.github.leordev.eosmc.player.PlayerMetaData;
 import io.github.leordev.eosmc.utils.HttpHandler;
 import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -28,7 +25,7 @@ public class GuiDeposit implements GuiEos {
     private final int CLOSE_SLOT = 29;
     private final int CONFIRM_SLOT = 33;
     private final int DEPOSIT_SLOTS = 36;
-    private boolean sendingToChain = false;
+    private boolean transacting = false;
     private Player player;
 
     public GuiDeposit(Player player) {
@@ -47,10 +44,7 @@ public class GuiDeposit implements GuiEos {
     @Override
     public void onGuiClick(InventoryClickEvent event) {
 
-        if (event.getAction() == InventoryAction.DROP_ALL_CURSOR
-            || event.getAction() == InventoryAction.DROP_ALL_SLOT
-            || event.getAction() == InventoryAction.DROP_ONE_CURSOR
-            || event.getAction() == InventoryAction.DROP_ONE_SLOT) {
+        if (GuiHelper.isDropping(event.getAction())) {
             event.setCancelled(true);
             return;
         }
@@ -65,11 +59,11 @@ public class GuiDeposit implements GuiEos {
             if (!isEmptyStack(event.getCursor())) return;
         }
 
-        if(slot == CLOSE_SLOT && !sendingToChain) {
+        if(slot == CLOSE_SLOT && !transacting) {
             player.closeInventory();
         }
 
-        if(slot == CONFIRM_SLOT && !sendingToChain) {
+        if(slot == CONFIRM_SLOT && !transacting) {
             submitBatchToChain(event);
         }
     }
@@ -103,13 +97,11 @@ public class GuiDeposit implements GuiEos {
     }
 
     private void attemptBatchSubmission(List<ItemStack> items, InventoryView inventory) throws IOException {
-        sendingToChain = true;
+        transacting = true;
         MessageHelper.sendInfoAndWait(player, Lang.DP_ING);
 
         String account = PlayerMetaData.getEosAccount(player);
-        String url = EosConfig.getInterfaceServer() + "/player/" + account + "/deposit";
-        JsonObject jsonItems = makeJsonItems(items);
-        HttpHandler.postUrl(url, jsonItems.toString());
+        ApiDeposit.depositBatch(account, items);
 
         MessageHelper.sendSuccess(player,Lang.DP_SUCCESS);
         removeBatchItems(inventory);
@@ -124,26 +116,7 @@ public class GuiDeposit implements GuiEos {
                 : "Unknown Error";
         MessageHelper.sendError(player, Lang.DP_FAIL, reason);
 
-        sendingToChain = false;
-    }
-
-    private JsonObject makeJsonItems(List<ItemStack> items) {
-        JsonArray jsonItems = new JsonArray();
-        for (ItemStack itemStack : items) {
-            jsonItems.add(makeJsonItem(itemStack));
-        }
-        JsonObject obj = new JsonObject();
-        obj.add("items", jsonItems);
-        return obj;
-    }
-
-    private JsonObject makeJsonItem(ItemStack itemStack) {
-        TokenItem token = TokenHandler.fromItem(itemStack);
-        JsonObject jsonItem = new JsonObject();
-        jsonItem.addProperty("token_name", token.getEosTokenName());
-        jsonItem.addProperty("quantity", itemStack.getAmount());
-        jsonItem.addProperty("memo", itemStack.getItemMeta().toString());
-        return jsonItem;
+        transacting = false;
     }
 
     private void removeBatchItems(InventoryView inventory) {
