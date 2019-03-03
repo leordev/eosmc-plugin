@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.items.TokenHandler;
-import io.github.leordev.eosmc.items.TokenItem;
 import io.github.leordev.eosmc.items.TokenJson;
 import io.github.leordev.eosmc.utils.HttpHandler;
 import org.bukkit.inventory.ItemStack;

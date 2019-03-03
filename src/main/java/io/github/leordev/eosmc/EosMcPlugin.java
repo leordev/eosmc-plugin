@@ -3,6 +3,7 @@ package io.github.leordev.eosmc;
 import io.github.leordev.eosmc.commands.CommandDeposit;
 import io.github.leordev.eosmc.commands.CommandDump;
 import io.github.leordev.eosmc.commands.CommandEosacc;
+import io.github.leordev.eosmc.commands.CommandWithdraw;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.gui.GuiEventHandler;
 import io.github.leordev.eosmc.items.TokenHandler;
@@ -38,6 +39,7 @@ public class EosMcPlugin extends JavaPlugin implements Listener {
         getCommand("dump").setExecutor(new CommandDump());
         getCommand("eosacc").setExecutor(new CommandEosacc());
         getCommand("deposit").setExecutor(new CommandDeposit());
+        getCommand("withdraw").setExecutor(new CommandWithdraw());
     }
 
     @Override
