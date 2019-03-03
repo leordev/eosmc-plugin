@@ -9,7 +9,7 @@ public enum Lang {
     DP_HELP("dp-help", "Use /dp to deposit items to the blockchain"),
     DP_ING("dp-ing", "Depositing to your EOS account"),
     DP_SUCCESS("dp-success", "Items were deposited to the chain successfully"),
-    DP_FAIL("dp-fail", "Fail to deposit items, please try again..."),
+    DP_FAIL("dp-fail", "Fail to deposit items: %s"),
     PLAYER_NO_ACC("player-no-acc", "Ooopss... Looks like you didn't add your EOS Account yet."),
     PLAYER_HELP_URL("player-help-url", "Access http://eosminecraft.io/join to see instructions!"),
     PLAYER_WELCOME("player-welcome", "Welcome back to EOS Minecraft, %s"),

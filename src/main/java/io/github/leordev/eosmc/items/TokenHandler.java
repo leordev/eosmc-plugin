@@ -25,10 +25,15 @@ public class TokenHandler {
         return tokens;
     }
 
-    public static Optional<TokenItem> fromItem(ItemStack item) {
-        return tokens.stream()
-                .filter(t -> t.getSrcItemName().equals(item.getType().toString()))
+    public static TokenItem fromItem(ItemStack item) {
+        String name = item.getData().getItemType().toString();
+        Optional<TokenItem> token = tokens.stream()
+                .filter(t -> t.getSrcItemName().equals(name))
                 .findFirst();
+        if (token.isPresent()) {
+            return token.get();
+        }
+        throw new IllegalArgumentException("Invalid item " + name);
     }
 
     public static String tokenizeItemName(String name) {

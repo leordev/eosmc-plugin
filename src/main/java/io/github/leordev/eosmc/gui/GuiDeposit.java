@@ -109,7 +109,12 @@ public class GuiDeposit implements GuiEos {
 
     private void handleBatchSubmissionError(Exception e) {
         e.printStackTrace();
-        MessageHelper.sendError(player, Lang.DP_FAIL);
+
+        String reason = e instanceof IllegalArgumentException
+                ? e.getMessage()
+                : "Unknown Error";
+        MessageHelper.sendError(player, Lang.DP_FAIL, reason);
+
         sendingToChain = false;
     }
 
@@ -124,15 +129,12 @@ public class GuiDeposit implements GuiEos {
     }
 
     private JsonObject makeJsonItem(ItemStack itemStack) {
+        TokenItem token = TokenHandler.fromItem(itemStack);
         JsonObject jsonItem = new JsonObject();
-        Optional<TokenItem> token = TokenHandler.fromItem(itemStack);
-        if (token.isPresent()) {
-            jsonItem.addProperty("token_name", token.get().getEosTokenName());
-            jsonItem.addProperty("quantity", itemStack.getAmount());
-            return jsonItem;
-        } else {
-            throw new IllegalArgumentException("Invalid Item");
-        }
+        jsonItem.addProperty("token_name", token.getEosTokenName());
+        jsonItem.addProperty("quantity", itemStack.getAmount());
+        jsonItem.addProperty("memo", itemStack.getItemMeta().toString());
+        return jsonItem;
     }
 
     private void removeBatchItems(InventoryView inventory) {
