@@ -25,17 +25,4 @@ public class GuiEventHandler implements Listener {
             gui.onGuiClose();
         }
     }
-
-    @EventHandler
-    public void onInventoryMoveItem(InventoryMoveItemEvent e) {
-        if (e.getInitiator() instanceof GuiWithdraw) {
-            GuiWithdraw gui = (GuiWithdraw) e.getInitiator() ;
-            gui.transferItemFromChain(e);
-        }
-
-        if (e.getDestination() instanceof GuiWithdraw) {
-            GuiWithdraw gui = (GuiWithdraw) e.getDestination();
-            gui.rejectDeposits(e);
-        }
-    }
 }

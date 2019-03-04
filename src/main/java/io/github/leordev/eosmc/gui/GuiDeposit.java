@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.leordev.eosmc.api.ApiDeposit;
 import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.i18n.Lang;
+import io.github.leordev.eosmc.items.ItemHelper;
 import io.github.leordev.eosmc.items.TokenJson;
 import io.github.leordev.eosmc.player.PlayerMetaData;
 import io.github.leordev.eosmc.utils.HttpHandler;
@@ -50,13 +51,13 @@ public class GuiDeposit implements GuiEos {
         }
 
         ItemStack itemStack = event.getCurrentItem();
-        if(isEmptyStack(itemStack)) return;
+        if(ItemHelper.isEmpty(itemStack)) return;
 
         int slot = event.getRawSlot();
 
         if (slot == CLOSE_SLOT || slot == CONFIRM_SLOT) {
             event.setCancelled(true);
-            if (!isEmptyStack(event.getCursor())) return;
+            if (!ItemHelper.isEmpty(event.getCursor())) return;
         }
 
         if(slot == CLOSE_SLOT && !transacting) {
@@ -90,7 +91,7 @@ public class GuiDeposit implements GuiEos {
         for (int i = 0; i < DEPOSIT_SLOTS; i++) {
             if (i == CLOSE_SLOT || i == CONFIRM_SLOT) continue;
             ItemStack item = inventory.getItem(i);
-            if (isEmptyStack(item)) continue;
+            if (ItemHelper.isEmpty(item)) continue;
             items.add(item);
         }
         return items;
@@ -123,7 +124,7 @@ public class GuiDeposit implements GuiEos {
         for (int i = 0; i < DEPOSIT_SLOTS; i++) {
             if (i == CLOSE_SLOT || i == CONFIRM_SLOT) continue;
             ItemStack item = inventory.getItem(i);
-            if (isEmptyStack(item)) continue;
+            if (ItemHelper.isEmpty(item)) continue;
             inventory.setItem(i, null);
         }
     }
@@ -138,11 +139,6 @@ public class GuiDeposit implements GuiEos {
             }
             player.updateInventory();
         }
-    }
-
-    private boolean isEmptyStack(ItemStack itemStack) {
-        return itemStack == null
-                || itemStack.getType().equals(Material.AIR);
     }
 
 }
