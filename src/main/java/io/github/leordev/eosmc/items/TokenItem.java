@@ -16,8 +16,6 @@ public class TokenItem {
     private boolean transferable = true;
     private long maxSupply = 999999999999L;
 
-    private static final String DEFAULT_CATEGORY = "minecraft";
-
     public TokenItem(Material material) {
         this.srcItemId = material.getId();
         this.srcItemName = material.getKey().toString();

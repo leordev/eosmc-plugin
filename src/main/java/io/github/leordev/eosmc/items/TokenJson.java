@@ -18,14 +18,6 @@ public class TokenJson {
         return obj;
     }
 
-    public static JsonObject makeJsonFromSingleItem(ItemStack item) {
-        JsonArray jsonItems = new JsonArray();
-        jsonItems.add(makeJsonItem(item));
-        JsonObject obj = new JsonObject();
-        obj.add("items", jsonItems);
-        return obj;
-    }
-
     public static JsonObject makeJsonItem(ItemStack itemStack) {
         TokenItem token = TokenHandler.fromItem(itemStack);
         JsonObject jsonItem = new JsonObject();

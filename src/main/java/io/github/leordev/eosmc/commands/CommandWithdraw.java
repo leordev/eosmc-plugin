@@ -33,6 +33,7 @@ public class CommandWithdraw implements CommandExecutor {
             chest = ApiWithdraw.getChest(playerAccount);
             if (chest.size() < 1) {
                 MessageHelper.sendWarning(player, Lang.WT_FAIL_EMPTY);
+                return true;
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

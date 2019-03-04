@@ -1,18 +1,15 @@
 package io.github.leordev.eosmc.gui;
 
-import com.google.gson.JsonObject;
 import io.github.leordev.eosmc.api.ApiDeposit;
-import io.github.leordev.eosmc.config.EosConfig;
 import io.github.leordev.eosmc.i18n.Lang;
 import io.github.leordev.eosmc.items.ItemHelper;
-import io.github.leordev.eosmc.items.TokenJson;
 import io.github.leordev.eosmc.player.PlayerMetaData;
-import io.github.leordev.eosmc.utils.HttpHandler;
 import io.github.leordev.eosmc.utils.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -28,44 +25,55 @@ public class GuiDeposit implements GuiEos {
     private final int DEPOSIT_SLOTS = 36;
     private boolean transacting = false;
     private Player player;
+    private Inventory gui;
 
     public GuiDeposit(Player player) {
         this.player = player;
+        initInventory();
+    }
+
+    private void initInventory() {
+        gui = Bukkit.createInventory(this, DEPOSIT_SLOTS, Lang.DP_GUI_TITLE.toString());
+        gui.setItem(CLOSE_SLOT, new ItemStack(Material.BARRIER));
+        gui.setItem(CONFIRM_SLOT, new ItemStack(Material.KNOWLEDGE_BOOK));
     }
 
     @Override
     public Inventory getInventory() {
-        Inventory gui = Bukkit.createInventory(this, DEPOSIT_SLOTS, "Deposit to Blockchain");
-        gui.setItem(CLOSE_SLOT, new ItemStack(Material.BARRIER));
-        gui.setItem(CONFIRM_SLOT, new ItemStack(Material.KNOWLEDGE_BOOK));
-
         return gui;
     }
 
     @Override
     public void onGuiClick(InventoryClickEvent event) {
+        if (checkIsTransactingOrDroppingAndCancel(event)) return;
+        handleActions(event);
+    }
 
-        if (GuiHelper.isDropping(event.getAction())) {
+    private boolean checkIsTransactingOrDroppingAndCancel(InventoryClickEvent event) {
+        if (transacting || GuiHelper.isDropping(event.getAction())) {
             event.setCancelled(true);
-            return;
+            return true;
         }
+        return false;
+    }
 
-        ItemStack itemStack = event.getCurrentItem();
-        if(ItemHelper.isEmpty(itemStack)) return;
-
+    private void handleActions(InventoryClickEvent event) {
         int slot = event.getRawSlot();
 
-        if (slot == CLOSE_SLOT || slot == CONFIRM_SLOT) {
+        boolean isClosingWindow = slot == CLOSE_SLOT;
+        boolean isConfirmingBatch = slot == CONFIRM_SLOT;
+
+        if (isClosingWindow || isConfirmingBatch) {
             event.setCancelled(true);
-            if (!ItemHelper.isEmpty(event.getCursor())) return;
-        }
 
-        if(slot == CLOSE_SLOT && !transacting) {
-            player.closeInventory();
-        }
+            boolean isHoldingItem = !ItemHelper.isEmpty(event.getCursor());
+            if (isHoldingItem) return;
 
-        if(slot == CONFIRM_SLOT && !transacting) {
-            submitBatchToChain(event);
+            if (isConfirmingBatch) {
+                submitBatchToChain(event);
+            } else {
+                player.closeInventory();
+            }
         }
     }
 
@@ -130,7 +138,7 @@ public class GuiDeposit implements GuiEos {
     }
 
     @Override
-    public void onGuiClose() {
+    public void onGuiClose(InventoryCloseEvent event) {
         InventoryView inventory = player.getOpenInventory();
         List<ItemStack> recoveredItems = getDepositBatchItems(inventory);
         if (recoveredItems.size() > 0) {

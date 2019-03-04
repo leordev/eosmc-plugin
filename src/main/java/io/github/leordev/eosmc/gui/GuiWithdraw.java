@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +26,7 @@ public class GuiWithdraw implements GuiEos {
 
     public GuiWithdraw(Player player, List<ItemStack> chainChest) {
         this.player = player;
-        gui = Bukkit.createInventory(this, WITHDRAW_SLOTS, "Withdraw from Blockchain");
+        gui = Bukkit.createInventory(this, WITHDRAW_SLOTS, Lang.WT_GUI_TITLE.toString());
         initChest(chainChest);
     }
 
@@ -80,8 +81,7 @@ public class GuiWithdraw implements GuiEos {
     private void handlePlacing(InventoryClickEvent event) {
         boolean isPlayerSlot = event.getRawSlot() >= WITHDRAW_SLOTS;
         boolean isChainItem = !ItemHelper.isEmpty(chainItem);
-        boolean isEmptySlot = ItemHelper.isEmpty(event.getCurrentItem());
-        if (isPlayerSlot && isChainItem && isEmptySlot) {
+        if (isPlayerSlot && isChainItem) {
             transferItemFromChain(event);
         } else if (!isPlayerSlot) {
             handleChainReturn(event);
@@ -102,19 +102,20 @@ public class GuiWithdraw implements GuiEos {
         }
 
         try {
-            ItemStack cursor = event.getCursor();
-            int amount = event.getAction() == InventoryAction.PLACE_ONE ? 1 : cursor.getAmount();
-            ItemStack item = new ItemStack(cursor);
-            item.setAmount(amount);
+            ItemStack item = calculateTransfer(event);
             attemptTransfer(item);
-
-            int rest = cursor.getAmount() - amount;
-            if (rest == 0) {
-                chainItem = ItemHelper.emptyItem();
-            }
+            clearChainItem(event, item);
         } catch (Exception e) {
             handleTransferError(e, event);
         }
+    }
+
+    private ItemStack calculateTransfer(InventoryClickEvent event) {
+        ItemStack cursor = event.getCursor();
+        int amount = event.getAction() == InventoryAction.PLACE_ONE ? 1 : cursor.getAmount();
+        ItemStack item = new ItemStack(cursor);
+        item.setAmount(amount);
+        return item;
     }
 
     private void attemptTransfer(ItemStack item) throws IOException {
@@ -126,6 +127,13 @@ public class GuiWithdraw implements GuiEos {
 
         transacting = false;
         MessageHelper.sendSuccess(player,Lang.WT_SUCCESS);
+    }
+
+    private void clearChainItem(InventoryClickEvent event, ItemStack item) {
+        int rest = event.getCursor().getAmount() - item.getAmount();
+        if (rest == 0) {
+            chainItem = ItemHelper.emptyItem();
+        }
     }
 
     private void handleTransferError(Exception e, InventoryClickEvent event) {
@@ -153,6 +161,10 @@ public class GuiWithdraw implements GuiEos {
     }
 
     @Override
-    public void onGuiClose() {
+    public void onGuiClose(InventoryCloseEvent event) {
+        boolean chainItemOnCursor = !ItemHelper.isEmpty(chainItem);
+        if (chainItemOnCursor) {
+            event.getPlayer().setItemOnCursor(null);
+        }
     }
 }

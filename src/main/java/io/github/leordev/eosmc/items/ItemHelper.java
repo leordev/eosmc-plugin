@@ -10,6 +10,8 @@ public class ItemHelper {
     }
 
     public static boolean isEmpty(ItemStack item) {
-        return item == null || item.getType().equals(Material.AIR);
+        return item == null
+                || item.getType().equals(Material.AIR)
+                || item.getAmount() == 0;
     }
 }

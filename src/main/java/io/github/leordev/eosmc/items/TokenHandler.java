@@ -36,6 +36,21 @@ public class TokenHandler {
         throw new IllegalArgumentException("Invalid item " + name);
     }
 
+    public static ItemStack fromTokenJson(JsonObject obj) {
+        String name = obj.get("token_name").getAsString();
+
+        Optional<TokenItem> token = tokens.stream()
+                .filter(t -> t.getEosTokenName().equals(name))
+                .findFirst();
+        if (token.isPresent()) {
+            Double tokenAmount = obj.get("amount").getAsDouble();
+            int amount = tokenAmount > 64 ? 64 : tokenAmount.intValue();
+            ItemStack item = new ItemStack(Material.matchMaterial(token.get().getSrcItemName()), amount);
+            return item;
+        }
+        throw new IllegalArgumentException("Invalid item " + name);
+    }
+
     public static String tokenizeItemName(String name) {
         String alphabetized = name.replaceAll("0|[6-9]", "1");
         String sanitized = alphabetized.toLowerCase().replaceAll("_", ".");
@@ -86,20 +101,5 @@ public class TokenHandler {
         }
 
         return unPeriodRes.substring(0, end);
-    }
-
-    public static ItemStack fromTokenJson(JsonObject obj) {
-        String name = obj.get("token_name").getAsString();
-
-        Optional<TokenItem> token = tokens.stream()
-                .filter(t -> t.getEosTokenName().equals(name))
-                .findFirst();
-        if (token.isPresent()) {
-            Double tokenAmount = obj.get("amount").getAsDouble();
-            int amount = tokenAmount > 64 ? 64 : tokenAmount.intValue();
-            ItemStack item = new ItemStack(Material.matchMaterial(token.get().getSrcItemName()), amount);
-            return item;
-        }
-        throw new IllegalArgumentException("Invalid item " + name);
     }
 }
