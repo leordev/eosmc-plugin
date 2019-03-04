@@ -18,7 +18,9 @@ public enum Lang {
     WT_REJECTED("wt-rejected", "You can't store items while withdrawing, use /dp to deposit"),
     WT_ING("wt-ing", "Withdrawing item from your EOS Chest"),
     WT_SUCCESS("wt-success", "Items were transferred successfully"),
-    WT_FAIL("wt-fail", "Fail to transfer item: %s")
+    WT_FAIL("wt-fail", "Fail to transfer item: %s"),
+    WT_FAIL_ITEM("wt-fail-item", "Fail to load item(s): %s"),
+    WT_FAIL_EMPTY("wt-fail-empty", "Your inventory is empty"),
     ;
 
     private final String path;

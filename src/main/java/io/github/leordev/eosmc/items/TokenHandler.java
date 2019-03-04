@@ -1,8 +1,6 @@
 package io.github.leordev.eosmc.items;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.leordev.eosmc.EosMcPlugin;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,7 +26,7 @@ public class TokenHandler {
     }
 
     public static TokenItem fromItem(ItemStack item) {
-        String name = item.getData().getItemType().toString();
+        String name = item.getType().getKey().toString();
         Optional<TokenItem> token = tokens.stream()
                 .filter(t -> t.getSrcItemName().equals(name))
                 .findFirst();
@@ -99,7 +97,7 @@ public class TokenHandler {
         if (token.isPresent()) {
             Double tokenAmount = obj.get("amount").getAsDouble();
             int amount = tokenAmount > 64 ? 64 : tokenAmount.intValue();
-            ItemStack item = new ItemStack(Material.getMaterial(token.get().getSrcItemName()), amount);
+            ItemStack item = new ItemStack(Material.matchMaterial(token.get().getSrcItemName()), amount);
             return item;
         }
         throw new IllegalArgumentException("Invalid item " + name);

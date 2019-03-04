@@ -2,7 +2,6 @@ package io.github.leordev.eosmc.items;
 
 import io.github.leordev.eosmc.utils.StringHelper;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,13 +20,9 @@ public class TokenItem {
 
     public TokenItem(Material material) {
         this.srcItemId = material.getId();
-        this.srcItemName = material.name();
-        this.eosCategory = DEFAULT_CATEGORY;
-        this.eosTokenName = TokenHandler.tokenizeItemName(this.srcItemName);
-    }
-
-    public TokenItem(ItemStack item) {
-        this(Material.getMaterial(item.toString()));
+        this.srcItemName = material.getKey().toString();
+        this.eosCategory = material.getKey().getNamespace();
+        this.eosTokenName = TokenHandler.tokenizeItemName(material.getKey().getKey());
     }
 
     public int getSrcItemId() {

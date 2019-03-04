@@ -26,12 +26,13 @@ public class GuiWithdraw implements GuiEos {
         this.player = player;
         this.chainChest = new ArrayList<>();
         initChest(chainChest);
+        player.updateInventory();
     }
 
     private void initChest(List<ItemStack> chainChest) {
         for (int i = 0; i < chainChest.size(); i++) {
             ItemStack item = chainChest.get(i);
-            getInventory().setItem(i, item);
+            getInventory().addItem(item);
             this.chainChest.add(item);
         }
     }
